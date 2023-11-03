@@ -32,8 +32,8 @@ ip a
 nano /etc/network/intefaces
 ~~~
 ### Затем нужно будет настоить IP адресацию в соответствии с нашей таблицей. Выглядеть это должно следующим способом:
+#### ISP
 ~~~
-__ISP__
 auto ens192
 iface ens192 inet static
 address 192.168.0.126
@@ -41,7 +41,7 @@ netmask 255.255.255.0
 
 auto ens224
 iface ens224 inet static
-address 192.168.0.119
+address 192.168.0.121
 netmask 255.255.255.252
 
 auto ens256
@@ -49,6 +49,48 @@ iface ens256 inet static
 address 10.12.26.13
 netmask 255.255.255.224
 gateway 10.12.26.254
+~~~
+#### HQ-R
+~~~
+auto ens192
+iface ens192 inet static
+address 192.168.0.5
+netmask 255.255.255.128
+
+auto ens224
+iface ens224 inet static
+address 192.168.0.125
+netmask 255.255.255.252
+gateway 192.168.0.126
+~~~
+#### BR-R
+~~~
+auto ens192
+iface ens192 inet static
+address 192.168.0.89
+netmask 255.255.255.224
+
+auto ens224
+iface ens224 inet static
+address 192.168.0.120
+netmask 255.255.255.252
+gateway 192.168.0.121
+~~~
+#### HQ-SRV
+~~~
+auto ens192
+iface ens192 inet static
+address 192.168.0.6
+netmask 255.255.255.128
+gateway 190.168.0.5
+~~~
+#### BR-SRV
+~~~
+auto ens192
+iface ens192 inet static
+address 192.168.0.88
+netmask 255.255.255.224
+gateway 192.168.0.89
 ~~~
 ### Сохраним конфигурацию и выйдем из настройки сочетанием клавиш:
 ~~~
