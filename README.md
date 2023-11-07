@@ -113,6 +113,7 @@ nano /etc/sysctl.conf
 #net.ipv4.ip_forward=1
 ~~~
 __Сохраняем конфигурацию и выходим из неё__
+
 `CTRL + S`
 
 `CTRL + X`
