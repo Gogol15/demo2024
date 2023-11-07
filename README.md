@@ -113,6 +113,7 @@ nano /etc/sysctl.conf
 #net.ipv4.ip_forward=1
 ~~~
 Проверяем выполнение с помощью команды `sysctl -p`
+
 Следующим шагом нам нужно прописать следующее:
 ~~~
 ip tables -A POSTROUTING -t nat -j MAS QUERADE
