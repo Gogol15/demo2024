@@ -122,7 +122,7 @@ __Сохраняем конфигурацию и выходим из неё__
 
 Следующим шагом нам нужно прописать следующее:
 ~~~
-ip tables -A POSTROUTING -t nat -j MASQUERADE
+iptables -A POSTROUTING -t nat -j MASQUERADE
 ~~~
 Затем нужно создать файл для автоматического запуска NAT после перезагрузки:
 ~~~
@@ -131,7 +131,7 @@ nano /etc/network/if-pre-up.d/nat
 В файл нужно вписать следующее:
 ~~~
 #!/bin/sh
-/sbin/iptables -A POSTROUTING -t nat -j MASQERADE
+/sbin/iptables -A POSTROUTING -t nat -j MASQUERADE
 ~~~
 И даём соответствующие права файлу:
 ~~~
