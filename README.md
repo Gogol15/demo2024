@@ -162,6 +162,15 @@ systemctl restart frr
 sh int br
 ~~~
 ![image](https://github.com/Gogol15/demo2024/assets/79337104/32c4e0dd-996b-4e9f-b430-43bd8a62f4f8)
+Настроим ospf, прописав IP-адреса BR-R и HQ-R
 ~~~
 conf t
+router ospf
+net 192.168.0.89/30 area 0
+net 192.168.0.5/30 area 0
 ~~~
+И далее нужно натроить __frr__ на BR-R и HQ-R
+Затем нужно будет пропинговать машины, дабы убедиться в правильности настройки:
+
+`HQ-SRV` __-__ `BR-SRV`
+`BR-SRV`__-__ `HQ-SRV`
