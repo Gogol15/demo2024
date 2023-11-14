@@ -194,7 +194,7 @@ nano /etc/dhcp/dhcpd.conf
 ~~~
 subnet 192.168.0.0 netmask 255.255.255.0 {
  range 192.168.0.1 192.168.0.162;
- optiondomain-name-servers 8.8.8.8 8.8.4.4;
+ option domain-name-servers 8.8.8.8 8.8.4.4;
  option routers 192.168.0.1;
  option subnet-mask 255.255.255.252;
 }
