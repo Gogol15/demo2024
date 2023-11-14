@@ -179,7 +179,7 @@ __И далее нужно натроить __frr__ на BR-R и HQ-R__
 Настроить DHCP IP-адресов на HQ-R
 ### Загружаем нужный пакет, после чего заходим в конфиг
 ~~~
-apt install isc-shcp-server
+apt install isc-dhcp-server
 nano /etc/default/isc-dhcp-server
 ~~~
 ### В конфиге указываем интерфейс
