@@ -210,3 +210,10 @@ iface ens192 inet dhcp
 systemctl restart isc-dhcp-server.service
 systemctl restart networking
 ~~~
+## Задание 1.4
+Настройка локальных учетных записей на наших машинах 
+| Учетная запись |	 Пароль 	|   Примечание    |
+|----------------|----------|-----------------|
+|      Admin     |	P@ssw0rd	| CLI HQ-SRV HQ-R |
+|  Branch admin  |	P@ssw0rd	|   BR-SRV BR-R   |
+|  Network admin | P@ssw0rd	| HQ-R BR-R BR-SRV|
