@@ -217,3 +217,15 @@ systemctl restart networking
 |      Admin     |	P@ssw0rd	| CLI HQ-SRV HQ-R |
 |  Branch admin  |	P@ssw0rd	|   BR-SRV BR-R   |
 |  Network admin | P@ssw0rd	| HQ-R BR-R BR-SRV|
+Создаём нового пользователя командой 
+~~~
+useradd (имя пользователя без скобок)
+~~~
+Задаём пароль для пользователей
+~~~
+passwd (имя пользователя без скобок)
+~~~
+Проверяем пользователей 
+~~~
+nano /etc/passwd
+~~~
