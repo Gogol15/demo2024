@@ -208,3 +208,7 @@ iface ens192 inet dhcp
 #gateway 192.168.0.5
 ~~~
 ### Перезагружаем сам DHCP и сервер
+~~~
+systemctl restart isc-dhcp-server.service
+systemctl restart networking
+~~~
