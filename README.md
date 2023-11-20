@@ -36,12 +36,12 @@ nano /etc/network/intefaces
 ~~~
 auto ens192
 iface ens192 inet static
-address 192.168.0.126
+address 192.168.0.162
 netmask 255.255.255.0
 
 auto ens224
 iface ens224 inet static
-address 192.168.0.121
+address 192.168.0.166
 netmask 255.255.255.252
 
 auto ens256
@@ -54,43 +54,43 @@ gateway 10.12.26.254
 ~~~
 auto ens192
 iface ens192 inet static
-address 192.168.0.5
+address 192.168.0.2
 netmask 255.255.255.128
 
 auto ens224
 iface ens224 inet static
-address 192.168.0.125
+address 192.168.0.161
 netmask 255.255.255.252
-gateway 192.168.0.126
+gateway 192.168.0.162
 ~~~
 #### BR-R
 ~~~
 auto ens192
 iface ens192 inet static
-address 192.168.0.89
+address 192.168.0.130
 netmask 255.255.255.224
 
 auto ens224
 iface ens224 inet static
-address 192.168.0.120
+address 192.168.0.165
 netmask 255.255.255.252
-gateway 192.168.0.121
+gateway 192.168.0.166
 ~~~
 #### HQ-SRV
 ~~~
 auto ens192
 iface ens192 inet static
-address 192.168.0.6
+address 192.168.0.1
 netmask 255.255.255.128
-gateway 190.168.0.5
+gateway 190.168.0.2
 ~~~
 #### BR-SRV
 ~~~
 auto ens192
 iface ens192 inet static
-address 192.168.0.88
+address 192.168.0.129
 netmask 255.255.255.224
-gateway 192.168.0.89
+gateway 192.168.0.130
 ~~~
 ### Сохранить конфигурацию и выйти из настройки сочетанием клавиш:
 `ctrl + S` и `ctrl + X`
@@ -167,6 +167,7 @@ conf t
 router ospf
 net 192.168.0.160/30 area 0
 net 192.168.0.164/30 area 0
+ip forwarding
 ~~~
 __И далее нужно натроить __frr__ на BR-R и HQ-R__
 ### Затем нужно будет пропинговать машины, дабы убедиться в правильности настройки:
