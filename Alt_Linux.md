@@ -56,6 +56,7 @@ echo default via xxx.xxx.xxx.xxx > /etc/net/ifaces/ensxxx/ipv4route
 systemctl restart network
 ~~~
 Проверяем результат командой `ip a`
+
 **Если на одном интерфейсе отображается 2 разных ip aдреса, то пишем команду:**
 ~~~
 systemctl disable network.service NetworkManager
