@@ -61,3 +61,19 @@ systemctl restart network
 ~~~
 systemctl disable network.service NetworkManager
 ~~~
+### Настройка туннеля на HQ-R и BR-R
+Создаём директорию, ведущую к новому интерфейсу `tun1`
+~~~
+mkdir /etc/net/ifaces/tun1
+~~~
+Открываем файл `options` с использованием `vim` или `nano` (я пользуюсь vim)
+~~~
+vim /etc/net/ifaces/tun1/options
+~~~
+В нём указываем следующее:
+
+![image](https://github.com/Gogol15/demo2024/assets/79337104/5790c202-103a-4648-a5db-a39851baa503)
+
+**Где `TUNLOCAL` – ip адрес внешнего интефейса настраиваемой машины (HQ-R)**
+
+**А `TUNREMOTE` – это ip адрес внешнего интерфейса второй машины (BR-R)**
