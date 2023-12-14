@@ -61,7 +61,7 @@ systemctl restart network
 ~~~
 systemctl disable network.service NetworkManager
 ~~~
-### Настройка туннеля на HQ-R и BR-R
+## Настройка туннеля на HQ-R и BR-R
 Создаём директорию, ведущую к новому интерфейсу `tun1`
 ~~~
 mkdir /etc/net/ifaces/tun1
