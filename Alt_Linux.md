@@ -77,3 +77,25 @@ vim /etc/net/ifaces/tun1/options
 **Где `TUNLOCAL` – ip адрес внешнего интефейса настраиваемой машины (HQ-R)**
 
 **А `TUNREMOTE` – это ip адрес внешнего интерфейса второй машины (BR-R)**
+## Настройка NAT на ISP, HQ-R, BR-R.
+Для начала, на устройстве ISP установим сервис Firewalld:
+~~~
+apt-get install firewalld
+~~~
+Включаем автозагрузку^
+~~~
+systemctl enable --now firewalld
+~~~
+Добавляем правила к исходящим и входящим пакетам:
+~~~
+firewall-cmd --permanent --zone=public --add-interface=ens33
+firewall-cmd --permanent --zone=trusted --add-interface=ens34
+~~~
+Включаем сам NAT:
+~~~
+firewall-cmd --permanent --zone=public --add-masquerade
+~~~
+И сохраняем правила:
+~~~
+firewall-cmd --reload
+~~~
