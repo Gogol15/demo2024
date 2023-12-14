@@ -99,3 +99,4 @@ firewall-cmd --permanent --zone=public --add-masquerade
 ~~~
 firewall-cmd --reload
 ~~~
+**Всё то же самое выполняем на HQ-R и BR-R**
