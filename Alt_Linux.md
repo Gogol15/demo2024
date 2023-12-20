@@ -82,7 +82,7 @@ vim /etc/net/ifaces/tun1/options
 ~~~
 apt-get install firewalld
 ~~~
-Включаем автозагрузку^
+Включаем автозагрузку
 ~~~
 systemctl enable --now firewalld
 ~~~
