@@ -100,3 +100,39 @@ firewall-cmd --permanent --zone=public --add-masquerade
 firewall-cmd --reload
 ~~~
 **Всё то же самое выполняем на HQ-R и BR-R**
+
+---
+
+## Настройка динамической маршрутизации FRR
+Для начала установим FRR и включим его автозагрузку:
+```
+apt-get -y install frr
+systemctl enable --now frr
+```
+Далее включение демона:  
+```
+nano /etc/frr/daemons
+```
+Меняем `ospfd=no`  
+На `ospfd =yes`
+
+После заходим в среду роутера через `vtysh`
+И прописываем:  
+```
+conf t
+    router ospf
+    net 192.168.0.160/30 area 0
+    net 192.168.0.164/30 area 0
+    exit
+ip forwarding
+do w
+```    
+Иногда настройки vtysh слетают, и чтобы такого не происходило, заходим в:
+```
+nano /etc/frr/frr.conf
+```
+И добавляем после `ipv6 forwarding` такую строчку:
+```
+ip forwarding
+```
+**Все это проделывается на HQ-R и BR-R**
