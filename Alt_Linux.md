@@ -1,7 +1,7 @@
 # Задание 1.
 
-    <details>
-    <summary>Базова настройка всех устройств</summary>
+<details>
+<summary>Базова настройка всех устройств</summary>
 a.Собрать топологию согласно рисунку. Все устройства работают на OC Linux - ALT
 - ISP - Альт Сервер 10.2 (CLI)
 - CLI - Альт Рабочая станция 10.2 (GUI)
@@ -63,6 +63,7 @@ systemctl restart network
 ~~~
 systemctl disable network.service NetworkManager
 ~~~
+</details>
 ## Настройка туннеля на HQ-R и BR-R
 Создаём директорию, ведущую к новому интерфейсу `tun1`
 ~~~
