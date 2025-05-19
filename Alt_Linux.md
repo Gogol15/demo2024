@@ -148,3 +148,342 @@ ip forwarding
 **Все это проделывается на HQ-R и BR-R**
 
 </details>
+
+## Модуль 1 задание 2
+
+<details>
+    <summary>NAT с помощью iptables</summary>
+
+Включить ip-адресацию `/etc/net/sysctl.conf`
+```
+net.ipv4.ip_forward = 1
+```
+
+Приминить изменения
+```
+sudo sysctl -p
+```
+
+Интерфейсы:
+- `eth0` - внешний интерфейс
+- `eth1` - внутрений интерфейс
+
+Интерфейс с раздачей интернета:
+```
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+```
+
+Разрешения на передачу адресации:
+внутри
+```
+iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+```
+снаружи
+```
+iptables -A FORWARD -i eth0 -o eth1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+```
+
+Сохранить настройку:
+```
+iptables-save
+```
+
+</details>
+
+<details>
+    <summary>NAT с помощью firewalld</summary>
+    
+Отключить NetworkManager:
+```
+systemctl disable network.service NetworkManager
+```
+Настройки интерфейсов должны быть такими:
+```
+NM_CONTROLLED=no
+DISABLED=no
+```
+Установка firewalld:
+```
+apt-get -y install firewalld
+```
+Автозагрузка:
+```
+systemctl enable --now firewalld
+```
+Правила к исходящим пакетам:
+```
+firewall-cmd --permanent --zone=public --add-interface=ens33
+```
+Правила к входящим пакетам:
+```
+firewall-cmd --permanent --zone=trusted --add-interface=ens34
+```
+Включение NAT:
+```
+firewall-cmd --permanent --zone=public --add-masquerade
+```
+Сохранение правил:
+```
+firewall-cmd --reload
+```
+
+</details>
+
+## Модуль 1 задание 3
+
+<details><summary>Маршрутизация через frr</summary>
+
+Настройте внутреннюю динамическую маршрутизацию по средствам FRR. Выберите и обоснуйте выбор протокола динамической маршрутизации из расчёта, что в дальнейшем сеть будет масштабироваться.  
+a. Составьте топологию сети L3.  
+
+Установка пакета:
+```
+apt-get -y install frr
+```
+Автозагрузка:
+```
+systemctl enable --now frr
+```
+Включение демона службы ospf:
+```
+nano /etc/frr/daemons
+```
+```
+ospfd=yes
+```
+```
+systemctl restart frr
+```
+Вход в среду роутера:
+```
+vtysh
+```
+Показать интерфейсы:
+```
+sh in br
+```
+|Interface|Status|VRF|Adresses|
+|:----:|:-:|:------:|:--------------:|
+|ens224|up |default |192.168.0.162/30|
+|ens192|up |default |192.168.0.129/27|
+|lo    |up |default |                |
+
+Активировать ospf:
+```
+router ospf
+```
+Вводим СЕТИ:
+```
+net 192.168.0.160/30 area 0
+net 192.168.0.128/27 area 0
+```
+Показать соседей:
+```
+do sh ip ospf neighbor
+```
+СОХРАНИТЬ КОНФИГИ:
+```
+do w
+```
+
+![image](https://github.com/abdurrah1m/DEMO2024/assets/148451230/a39631c1-a683-47d2-a63a-4bbb93d7556a)
+</details>
+
+## Модуль 1 задание 4
+
+<details><summary>Раздача ip-адресов через dhcp</summary>
+
+Настройте автоматическое распределение IP-адресов на роутере HQ-R.  
+a. Учтите, что у сервера должен быть зарезервирован адрес.
+
+Установка пакета:
+```
+apt-get -y install dhcp-server
+```
+`/etc/sysconfig/dhcpd`, указываю интерфейс внутренней сети:
+```
+DHCPDARGS=ens19
+```
+Копирую образец:
+```
+cp /etc/dhcp/dhcpd.conf.sample /etc/dhcp/dhcpd.conf
+```
+`/etc/dhcp/dhcpd.conf` параметры раздачи:
+```
+ddns-update-style-none;
+
+subnet 192.168.0.0 netmask 255.255.255.128 {
+        option routers                  192.168.0.1;
+        option subnet-mask              255.255.255.128;
+        option domain-name-servers      8.8.8.8, 8.8.4.4;
+
+        range dynamic-bootp 192.168.0.20 192.168.0.50;
+        default-lease-time 21600;
+        max-lease-time 43200;
+}
+```
+```
+systemctl restart dhcpd
+```
+```
+systemctl status dhcpd.service
+```
+Автозагрузка:
+```
+chkconfig dhcpd on
+service dhcpd start
+```
+HQ-SRV (клиент):
+```
+nano /etc/net/ifaces/ens18/ipv4address
+```
+```
+#192.168.0.40
+```
+```
+nano /etc/net/ifaces/ens18/options
+```
+```
+BOOTROTO=dhcp
+TYPE=eth
+NM_CONTROLLED=yes
+DISABLED=no
+CONFIG_IPV4=yes
+```
+```
+service network restart
+```
+```
+ens18:
+    inet 192.168.0.38/25 brd 192.168.0.127
+```
+</details>
+
+## Модуль 1 задание 5
+
+<details><summary>Добавление пользователей на виртуальные машины</summary>
+
+Настройте локальные учётные записи на всех устройствах в соответствии с таблицей.
+
+|Учётная запись|Пароль|Примечание|
+|:--------------:|:------:|:----------------:|
+|Admin           |P@ssw0rd|CLI, HQ-SRV       |
+|Branch admin    |P@ssw0rd|BR-SRV, BR-R      |
+|Network admin   |P@ssw0rd|HQ-R, BR-R, HQ-SRV|
+
+Пользователь `admin` на `HQ-SRV`
+```
+adduser admin
+```
+```
+usermod -aG root admin
+```
+```
+passwd admin
+P@ssw0rd
+P@ssw0rd
+```
+```
+nano /etc/passwd
+```
+```
+admin:x:0:501::/home/admin:/bin/bash
+```
+</details>
+
+## Модуль 1 задание 6
+
+<details><summary>Измерьте пропускную способность сети между двумя узлами</summary>
+
+
+Измерьте пропускную способность сети между двумя узлами HQ-R-ISP по средствам утилиты iperf 3. Предоставьте описание пропускной способности канала со скриншотами.
+
+```
+apt-get -y install iperf3
+```
+ISP как сервер:
+если надо открыть порт
+```
+iptables -A INPUT -p tcp --dport 5201 -j ACCEPT
+```
+```
+iperf3 -s
+```
+HQ-R:
+```
+iperf3 -c 192.168.0.161 -f M
+```
+```
+[ID] Interval      Transfer   Bitrate        Retr Cwnd
+[ 5] 0.00-1.00 sec 345 MBytes 344 MBytes/sec    0 538 KBytes
+[ 5] 1.00-2.00 sec 338 MBytes 338 MBytes/sec    0 676 KBytes
+[ 5] 3.00-4.00 sec 341 MBytes 341 MBytes/sec    0 749 KBytes
+```
+</details>
+
+## Модуль 1 задание 7
+
+<details><summary>backup скрипты для сохранения конфигурации сетевых устройств</summary>
+
+Составьте backup скрипты для сохранения конфигурации сетевых устройств, а именно HQ-R BR-R. Продемонстрируйте их работу.
+
+Заход в планировщик заданий:
+```
+EDITOR=nano crontab -e
+```
+минута | час | день | месяц | день недели | "команда, например `reboot`":
+```
+9 15 * * * cp /etc/frr/frr.conf /etc/networkbackup
+```
+```
+ls /etc/networkbackup
+```
+```
+frr.conf
+```
+</details>
+
+## Модуль 1 задание 8
+
+<details><summary>подключение по SSH для удалённого конфигурирования устройства</summary>
+
+Настройте подключение по SSH для удалённого конфигурирования устройства HQ-SRV по порту 2222. Учтите, что вам необходимо перенаправить трафик на этот порт по средствам контролирования трафика.
+
+HQ-SRV:
+```
+apt-get -y install openssh-server
+```
+```
+systemctl enable --now sshd
+```
+```
+nano /etc/openssh/sshd_config
+```
+```
+Port 2222
+PermitRootLogin no
+PasswordAuthentication yes
+```
+Подключение
+```
+ssh student@192.168.0.40 -p 2222
+```
+
+</details>
+
+## Модуль 1 задание 9
+
+<details><summary>контроль доступа до HQ-SRV по SSH</summary>
+
+
+Настройте контроль доступа до HQ-SRV по SSH со всех устройств, кроме CLI.
+
+HQ-SRV:
+```
+nano /etc/openssh/sshd_config
+```
+Выбор пользователей
+```
+AllowUsers student@192.168.0.1 student@192.168.0.140 student@192.168.0.129 student@10.10.201.174
+```
+</details>
